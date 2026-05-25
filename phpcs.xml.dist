@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Moodle local_userdatasync">
+    <description>Moodle coding style checks for local_userdatasync.</description>
+
+    <file>.</file>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+
+    <rule ref="moodle"/>
+    <rule ref="moodle-extra"/>
+</ruleset>
