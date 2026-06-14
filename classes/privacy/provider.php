@@ -110,29 +110,35 @@ class provider implements
         global $DB;
 
         $userid = $contextlist->get_user()->id;
+        $systemcontext = null;
         foreach ($contextlist->get_contexts() as $context) {
-            if (!$context instanceof context_system) {
-                continue;
+            if ($context instanceof context_system) {
+                $systemcontext = $context;
+                break;
             }
-
-            $records = $DB->get_records('local_userdatasync_log', ['userid' => $userid], 'timecreated ASC');
-            $logs = [];
-            foreach ($records as $record) {
-                $logs[] = (object)[
-                    'fieldname' => $record->fieldname,
-                    'status' => $record->status,
-                    'message' => $record->message,
-                    'oldvalue' => $record->oldvalue,
-                    'newvalue' => $record->newvalue,
-                    'timecreated' => transform::datetime($record->timecreated),
-                ];
-            }
-
-            writer::with_context($context)->export_data(
-                [get_string('privacy:path:logs', 'local_userdatasync')],
-                (object)['logs' => $logs]
-            );
         }
+
+        if ($systemcontext === null) {
+            return;
+        }
+
+        $records = $DB->get_records('local_userdatasync_log', ['userid' => $userid], 'timecreated ASC');
+        $logs = [];
+        foreach ($records as $record) {
+            $logs[] = (object)[
+                'fieldname' => $record->fieldname,
+                'status' => $record->status,
+                'message' => $record->message,
+                'oldvalue' => $record->oldvalue,
+                'newvalue' => $record->newvalue,
+                'timecreated' => transform::datetime($record->timecreated),
+            ];
+        }
+
+        writer::with_context($systemcontext)->export_data(
+            [get_string('privacy:path:logs', 'local_userdatasync')],
+            (object)['logs' => $logs]
+        );
     }
 
     /**

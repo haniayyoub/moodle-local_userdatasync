@@ -263,7 +263,8 @@ class sync_service {
         }
 
         if ($hasstandardchanges) {
-            user_update_user($standardupdates, false, false);
+            // Standard profile changes must trigger core\event\user_updated for observers, caches, and integrations.
+            user_update_user($standardupdates, false, true);
         }
 
         if ($hascustomchanges) {

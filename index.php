@@ -30,13 +30,41 @@ $context = context_system::instance();
 require_capability('local/userdatasync:viewreport', $context);
 
 $status = optional_param('status', '', PARAM_ALPHANUMEXT);
-$fieldname = optional_param('fieldname', '', PARAM_RAW_TRIMMED);
-$datefromraw = optional_param('datefrom', '', PARAM_RAW_TRIMMED);
+$fieldname = optional_param('fieldname', '', PARAM_ALPHANUMEXT);
+$datefromraw = optional_param('datefrom', '', PARAM_ALPHANUMEXT);
 $datefrom = 0;
+$invaliddate = false;
+if ($fieldname !== '') {
+    $standardfields = [
+        'firstname',
+        'lastname',
+        'email',
+        'phone1',
+        'phone2',
+        'department',
+        'institution',
+    ];
+    $customfields = [];
+    $configuredcustomshortnames = ['faculty', 'major', 'degree'];
+    foreach ($configuredcustomshortnames as $shortname) {
+        if (!empty(get_config('local_userdatasync', 'map_profile_field_' . $shortname)) &&
+                $DB->record_exists('user_info_field', ['shortname' => $shortname])) {
+            $customfields[] = 'profile_field_' . $shortname;
+        }
+    }
+
+    if (!in_array($fieldname, array_merge($standardfields, $customfields), true)) {
+        $fieldname = '';
+    }
+}
+
 if ($datefromraw !== '') {
-    $timestamp = strtotime($datefromraw . ' 00:00:00');
-    if ($timestamp !== false) {
-        $datefrom = $timestamp;
+    if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $datefromraw, $matches) &&
+            checkdate((int)$matches[2], (int)$matches[3], (int)$matches[1])) {
+        $datefrom = make_timestamp((int)$matches[1], (int)$matches[2], (int)$matches[3], 0, 0, 0);
+    } else {
+        $invaliddate = true;
+        $datefromraw = '';
     }
 }
 
@@ -87,6 +115,9 @@ $logs = $DB->get_records_sql(
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('reportpage', 'local_userdatasync'));
+if ($invaliddate) {
+    echo $OUTPUT->notification(get_string('invaliddatefrom', 'local_userdatasync'), 'warning');
+}
 
 $lastsync = !empty($config->lastsynctime) ? userdate((int)$config->lastsynctime) : get_string('notyetrun', 'local_userdatasync');
 

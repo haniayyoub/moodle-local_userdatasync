@@ -256,6 +256,16 @@ For detailed steps, see [docs/installation.md](docs/installation.md).
 
 ## Submission Notes
 
+### Repository Name
+
+Keep the Moodle plugin directory and component name as `local_userdatasync`. For the Moodle Plugins Directory, the recommended GitHub repository name is `moodle-local_userdatasync`. If GitHub CLI is available and authenticated, rename the repository with:
+
+```bash
+gh repo rename moodle-local_userdatasync --yes
+```
+
+Otherwise, rename it manually in the GitHub repository settings.
+
 ### Installation
 
 Copy the plugin directory to `local/userdatasync`, keep the component name `local_userdatasync`, then run Moodle upgrade and purge caches from the Moodle root.

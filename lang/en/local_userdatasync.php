@@ -97,6 +97,7 @@ $string['statusfilter'] = 'Status';
 $string['usernamefilter'] = 'Username';
 $string['fieldnamefilter'] = 'Field name';
 $string['datefromfilter'] = 'Date from';
+$string['invaliddatefrom'] = 'Invalid date filter. Use YYYY-MM-DD.';
 $string['applyfilters'] = 'Apply filters';
 $string['resetsyncfilters'] = 'Reset filters';
 $string['testconnection'] = 'Test connection';

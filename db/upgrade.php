@@ -56,12 +56,22 @@ function xmldb_local_userdatasync_upgrade($oldversion) {
     if ($oldversion < 2026052500) {
         $dbman = $DB->get_manager();
         $table = new xmldb_table('local_userdatasync_log');
-        $field = new xmldb_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'id');
+        $useridindex = new xmldb_index('userid', XMLDB_INDEX_NOTUNIQUE, ['userid']);
 
         if ($dbman->table_exists($table)) {
+            if ($dbman->index_exists($table, $useridindex)) {
+                $dbman->drop_index($table, $useridindex);
+            }
+
             $DB->execute('UPDATE {local_userdatasync_log} SET userid = 0 WHERE userid IS NULL');
+
+            $field = new xmldb_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
             $dbman->change_field_notnull($table, $field);
             $dbman->change_field_default($table, $field);
+
+            if (!$dbman->index_exists($table, $useridindex)) {
+                $dbman->add_index($table, $useridindex);
+            }
         }
 
         upgrade_plugin_savepoint(true, 2026052500, 'local', 'userdatasync');

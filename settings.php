@@ -190,7 +190,7 @@ if ($hassiteconfig) {
         get_string('dbhost', 'local_userdatasync'),
         get_string('dbhost_desc', 'local_userdatasync'),
         '',
-        PARAM_RAW_TRIMMED
+        PARAM_TEXT
     ));
 
     $settings->add(new admin_setting_configtext(
@@ -198,7 +198,7 @@ if ($hassiteconfig) {
         get_string('dbname', 'local_userdatasync'),
         get_string('dbname_desc', 'local_userdatasync'),
         '',
-        PARAM_RAW_TRIMMED
+        PARAM_TEXT
     ));
 
     $settings->add(new admin_setting_configtext(
@@ -206,7 +206,7 @@ if ($hassiteconfig) {
         get_string('dbuser', 'local_userdatasync'),
         get_string('dbuser_desc', 'local_userdatasync'),
         '',
-        PARAM_RAW_TRIMMED
+        PARAM_TEXT
     ));
 
     $settings->add(new admin_setting_configpasswordunmask(
@@ -221,7 +221,7 @@ if ($hassiteconfig) {
         get_string('dbencoding', 'local_userdatasync'),
         get_string('dbencoding_desc', 'local_userdatasync'),
         'utf8mb4',
-        PARAM_RAW_TRIMMED
+        PARAM_ALPHANUMEXT
     ));
 
     $settings->add(new local_userdatasync_admin_setting_identifier(
@@ -229,7 +229,7 @@ if ($hassiteconfig) {
         get_string('dbtable', 'local_userdatasync'),
         get_string('dbtable_desc', 'local_userdatasync'),
         '',
-        PARAM_RAW_TRIMMED
+        PARAM_TEXT
     ));
 
     $settings->add(new admin_setting_description(
@@ -267,7 +267,7 @@ if ($hassiteconfig) {
         get_string('remotematchingfield', 'local_userdatasync'),
         get_string('remotematchingfield_desc', 'local_userdatasync'),
         'student_id',
-        PARAM_RAW_TRIMMED
+        PARAM_TEXT
     ));
 
     $mappingfields = [
@@ -289,7 +289,7 @@ if ($hassiteconfig) {
             get_string('mapfield', 'local_userdatasync', $fieldname),
             get_string('mapfield_desc', 'local_userdatasync', $fieldname),
             '',
-            PARAM_RAW_TRIMMED
+            PARAM_TEXT
         ));
     }
 
